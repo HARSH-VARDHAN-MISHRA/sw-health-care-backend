@@ -9,10 +9,10 @@ const categorySchema = new mongoose.Schema({
         type:String,
         required:[true,"Add Image"]
     },
-    // categoryActive:{
-    //     type:Boolean,
-    //     default:true
-    // }
+    categoryActive:{
+        type:Boolean,
+        default:false
+    }
 })
 
 const categoryDetail = mongoose.model('categoryDetail',categorySchema);
