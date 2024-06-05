@@ -15,12 +15,13 @@ const storage = multer.diskStorage({
 const upload = multer({storage:storage})
 
 // -- categories --- 
-categoryRouter.post("/create-category",upload.single("categoryImage") ,createCategory )
+categoryRouter.post("/create-category",upload.single("categoryImage") ,createCategory );
 categoryRouter.get("/get-all-category",getAllCategory);
 categoryRouter.delete('/delete-category/:id',deleteCategory);
-categoryRouter.post('/update-category/:id',updateCategory);
+categoryRouter.put('/update-category/:id',upload.single("categoryImage"),updateCategory);
 
 // -- Products ---- 
+
 
 
 module.exports = categoryRouter

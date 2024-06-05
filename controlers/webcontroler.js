@@ -26,7 +26,7 @@ const uploadImg = async (file) => {
 exports.createCategory = async (req, res) => {
     try {
         console.log(req.body);
-        const { categoryName } = req.body;
+        const { categoryName,categoryActive } = req.body;
         const {categoryImage} =req.file;
         if (!categoryName ) {
             return res.status(403).json({
@@ -43,7 +43,7 @@ exports.createCategory = async (req, res) => {
             });
         }
 
-        const newCategory = new categoryDetail({ categoryName })
+        const newCategory = new categoryDetail({ categoryName,categoryActive })
         console.log(req.file)
         if (req.file) {
             const url = await uploadImg(req.file.path)
@@ -113,38 +113,46 @@ exports.deleteCategory = async (req, res) => {
         });
     }
 }
-exports.updateCategory = async (req,res) =>{
+exports.updateCategory = async (req, res) => {
     try {
         const categoryId = req.params.id;
         const updates = req.body;
 
-        // Check if there are no fields to update
-        if (Object.keys(updates).length === 0) {
+        if (Object.keys(updates).length === 0 && !req.file) {
             return res.status(400).json({
                 success: false,
                 msg: "No fields to update."
             });
         }
 
+        // If there's an image file in the request, handle the image upload
+        if (req.file) {
+            const url = await uploadImg(req.file.path);
+            updates.categoryImage = url; // Add the image URL to the updates object
+        }
+
         const options = { new: true }; // Return the modified document
         const updatedCategory = await categoryDetail.findByIdAndUpdate(categoryId, updates, options);
+
         if (!updatedCategory) {
             return res.status(404).json({
                 success: false,
-                msg: "categoryDetail not found."
+                msg: "Category not found."
             });
         }
+
         res.status(200).json({
             success: true,
             msg: "Category updated successfully.",
             data: updatedCategory
         });
-        
+
     } catch (error) {
-        console.log("Error : ", error);
+        console.error("Error:", error);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error"
         });
     }
-}
+};
+
