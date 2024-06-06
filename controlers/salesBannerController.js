@@ -39,7 +39,7 @@ exports.createSaleBanner = async (req, res) => {
         if (existingBanner) {
             return res.status(403).json({
                 success: false,
-                message: "Banner Activated !!"
+                message: "Banner Name Already Exist !!"
             });
         }
 

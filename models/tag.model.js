@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 
 const TagsSchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        required: true // Ensure title is required
     },
     TagColour: {
-        type: String
+        type: String,
+        required: true // Ensure title is required
     },
 }, { timeStamps: true })
 
