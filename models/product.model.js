@@ -16,7 +16,19 @@ const productSchema = new mongoose.Schema({
     productPoints: {
         type: [String]
     },
-    productImages:[String],
+    firstImage:{
+        type:String,
+        required:true
+    },
+    secondImage:{
+        type:String
+    },
+    thirdImage:{
+        type:String
+    },
+    forthImage:{
+        type:String
+    },
     price: {
         type: Number,
         required: [true, "Add Product Price"]

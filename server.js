@@ -5,7 +5,7 @@ const {connectDb} = require('./configure/db');
 dotenv.config()
 // const { route } = require('./routes/allRoutes');
 // const router = require('./routes/allRoutes');
-const categoryRouter = require('./routes/allRoutes');
+const allRoutes = require('./routes/allRoutes')
 
 connectDb()
 const port = process.env.PORT
@@ -17,7 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.set(express.static("public"))
-app.use("/api/v1",categoryRouter);
+
+app.use("/api/v1",allRoutes);
 
 app.get("/",(req,res)=>{
     res.send("Welcome to SW Health care")
