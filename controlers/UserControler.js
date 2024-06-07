@@ -131,27 +131,3 @@ exports.getAllUsers = async (req, res) => {
 }
 
 //Password Change
-
-//get token from cookies
-exports.getTokenFromCookies = async (req, res) => {
-    try {
-        const { token } = req.cookies;
-        if (!token) {
-            return res.status(401).json({
-                success: true,
-                msg: "Please Login To Access this"
-            });
-        }
-         res.status(200).json({
-            success: true,
-            data: token
-        });
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            success: false,
-            msg: "Internal server error"
-        });
-    }
-}

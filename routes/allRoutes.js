@@ -30,7 +30,7 @@ route.delete('/delete-category/:id',deleteCategory);
 route.put('/update-category/:id',upload.single("categoryImage"),updateCategory);
 
 // -- Products ---- 
-route.post("/create-product",multerUploads,createProduct );
+route.post("/create-product",createProduct );
 route.get("/get-all-product",getAllProduct );
 route.get("/delete-product/:id",deleteProduct );
 route.get("/update-product/:id",updateProduct );
