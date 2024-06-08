@@ -5,11 +5,11 @@ const sendToken = require("../utils/sendToken");
 
 exports.register = async (req, res) => {
     try {
-        const { name, email, password } = req.body;
-        if (!name || !email || !password) {
+        const { name, email, password, phoneNumber } = req.body;
+        if (!name || !email || !password || !phoneNumber) {
             return res.status(400).json({
                 success: false,
-                error: "Please Enter Name, Email, and Password"
+                error: "Please Enter Name, Email, Phone Number and Password"
             });
         }
 
@@ -25,6 +25,7 @@ exports.register = async (req, res) => {
         user = await userModel.create({
             name,
             email,
+            phoneNumber,
             password,
         });
 
@@ -39,6 +40,15 @@ exports.register = async (req, res) => {
         // If the user was successfully created, send token
         sendToken(user, 201, res);
     } catch (error) {
+        if (error.code === 11000) {
+            // Handle duplicate key error
+            const duplicateKey = Object.keys(error.keyValue)[0];
+            const errorMessage = `${duplicateKey.charAt(0).toUpperCase() + duplicateKey.slice(1)} already exists`;
+            return res.status(400).json({
+                success: false,
+                error: errorMessage
+            });
+        }
         console.log(error);
         res.status(500).json({
             success: false,
@@ -54,7 +64,7 @@ exports.LoginUser = async (req, res) => {
         if (!email || !password) {
             return res.status(403).json({
                 success: false,
-                msg: "Please Filled All Required Filled"
+                msg: "Please Fill All Field"
             })
         }
         //after this check user
@@ -62,7 +72,7 @@ exports.LoginUser = async (req, res) => {
         if (!existUser) {
             return res.status(401).json({
                 success: false,
-                msg: "user is not find"
+                msg: "User not Avilable"
             })
         }
         //if user found

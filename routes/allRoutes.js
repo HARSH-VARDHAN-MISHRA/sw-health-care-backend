@@ -8,6 +8,7 @@ const { createProduct, getAllProduct, deleteProduct, updateProduct } = require('
 const { createSaleBanner, getAllSaleBanner, deleteSaleBanner, updateSaleBanner } = require('../controlers/salesBannerController');
 const { createBanner, getAllBanner, deleteBanner, updateBanner } = require('../controlers/BannerController');
 const { createTag, getAllTag, deleteTag, updateTag } = require('../controlers/TagControler');
+const { register, LoginUser } = require('../controlers/UserControler');
 
 
 const storage = multer.diskStorage({
@@ -17,11 +18,17 @@ const storage = multer.diskStorage({
     filename: function (req, file, cb) {
         cb(null, Date.now() + file.originalname)
     }
-})
+});
+
+
 const multerUploads = multer({ storage }).array('images')
 const SingleUpload = multer({ storage }).single('image')
 
 const upload = multer({storage:storage})
+
+// -- Authentication ---- 
+route.post("/register",register) // create Account
+route.post("/login",LoginUser)
 
 // -- categories --- 
 route.post("/create-category",upload.single("categoryImage") ,createCategory );
