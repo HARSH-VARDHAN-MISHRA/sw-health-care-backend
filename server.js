@@ -18,6 +18,12 @@ app.use(express.urlencoded({extended:true}));
 
 app.set(express.static("public"))
 
+// Error handling middleware (optional)
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
+
 app.use("/api/v1",allRoutes);
 
 app.get("/",(req,res)=>{

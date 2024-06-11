@@ -12,45 +12,74 @@ const UserSchema = mongoose.Schema({
         unique: true
     },
     phoneNumber: {
-        type:Number,
-        unique:true
+        type: Number,
+        unique: true
     },
     password: {
         type: String,
         trim: true
     },
-    emailVerified: {
+    // emailVerified: {
+    //     type: Boolean,
+    //     default: false
+    // },
+    isActive: {
         type: Boolean,
-        default: false
+        default: false,
+    },
+
+    Role: {
+        type: String,
+        enum: ["User", "Admin"],
+        default: "User",
+    },
+    OtpForVerification: {
+        type: Number
+    },
+    ForgetPasswordOtp: {
+        type: String
+    },
+    OtpGeneratedAt: {
+        type: Date,
     }
 }, { timestamps: true });
 
 // Middleware to hash the password before saving
-UserSchema.pre('save', async function(next) {
-    if (!this.isModified('password')) {
+UserSchema.pre('save', async function (next) {
+
+    // Instilize user with this
+    const user = this;
+
+    // check if the password is modified
+    if (!user.isModified('password')) {
         return next();
     }
+
+    // Hash the password using bcrypt 
     try {
-        const hashedPassword = await bcrypt.hash(this.password, 10);
-        this.password = hashedPassword;
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hash(user.password, salt);
+        user.password = hash;
         next();
     } catch (error) {
-        next(error);
+        console.log(error);
+        return next("Password Hashing Error");
     }
 });
 
 // Method to compare passwords
-UserSchema.methods.comparePassword = async function(candidatePassword) {
+UserSchema.methods.comparePassword = async function (enteredPassword) {
     try {
-        return await bcrypt.compare(candidatePassword, this.password);
+        return await bcrypt.compare(enteredPassword, this.password);
     } catch (error) {
-        throw new Error(error);
+        throw new Error('Password comparison failed', error);
     }
 };
+
 UserSchema.methods.getJWTToken = function () {
     return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRE,
+        expiresIn: process.env.JWT_EXPIRE,
     });
 };
 
-module.exports = mongoose.model('UserSchemaDetails',UserSchema);
+module.exports = mongoose.model('UserSchemaDetails', UserSchema);

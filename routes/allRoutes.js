@@ -8,7 +8,7 @@ const { createProduct, getAllProduct, deleteProduct, updateProduct } = require('
 const { createSaleBanner, getAllSaleBanner, deleteSaleBanner, updateSaleBanner } = require('../controlers/salesBannerController');
 const { createBanner, getAllBanner, deleteBanner, updateBanner } = require('../controlers/BannerController');
 const { createTag, getAllTag, deleteTag, updateTag } = require('../controlers/TagControler');
-const { register, LoginUser } = require('../controlers/UserControler');
+const { register, LoginUser, ResendSignOtp, ResendOtp, PasswordChangeRequest, verifyOtpForSignIn, VerifyOtp } = require('../controlers/UserControler');
 
 
 const storage = multer.diskStorage({
@@ -28,6 +28,13 @@ const upload = multer({storage:storage})
 
 // -- Authentication ---- 
 route.post("/register",register) // create Account
+
+route.post('/Password-change-request', PasswordChangeRequest);
+route.post('/Resend-Otp', ResendOtp);
+route.post('/Verify-sign-Otp', verifyOtpForSignIn);
+route.post('/resend-sign-Otp', ResendSignOtp);
+route.post('/Verify-Otp/:email/:newPassword', VerifyOtp)
+
 route.post("/login",LoginUser)
 
 // -- categories --- 
@@ -59,6 +66,8 @@ route.post("/create-tag",createTag );
 route.get("/get-all-tag",getAllTag);
 route.delete('/delete-tag/:id',deleteTag);
 route.put('/update-tag/:id',updateTag);
+
+
 
 
 
