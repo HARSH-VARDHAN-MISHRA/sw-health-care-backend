@@ -3,7 +3,8 @@ const merchantId = "M2257T8PKCFTS"
 const apiKey = "382a6ef0-8a78-4abd-bc79-5fd4afca18e6"
 const crypto = require('crypto');
 const axios = require('axios');
-const { search } = require('../routes/routes');
+// const { search } = require('../routes/routes');
+
 async function doPayment(amount, Merchant, transactionId, res, req) {
     try {
         console.log("i am hit")
@@ -58,27 +59,78 @@ async function doPayment(amount, Merchant, transactionId, res, req) {
     }
 }
 
+// exports.CreateOrder = async (req, res) => {
+//     try {
+//         console.log("i am hiut")
+//         console.log(req.body)
+//         const { items, finalPrice, UserInfo, PaymentMode, UserDeliveryAddress } = req.body;
+
+//         if (!finalPrice || !UserInfo || !PaymentMode || !UserDeliveryAddress) {
+//             return res.status(403).json({
+//                 success: false,
+//                 msg: "Please Fill All Fields "
+//             });
+//         }
+
+//         let payData;
+
+//         if (PaymentMode === "Online") {
+//             console.log("I Ma Hit")
+//             const { amount, transactionId, Merchant } = generateOnlinePaymentDetails(finalPrice);
+//             payData = await doPayment(amount, Merchant, transactionId, res, req);
+//         }
+
+//         const createOrderSave = new Orders({
+//             items: items,
+//             UserInfo,
+//             UserDeliveryAddress,
+//             PaymentMode,
+//             FinalPrice: finalPrice
+//         });
+
+//         await createOrderSave.save();
+
+//         res.status(200).json({
+//             success: true,
+//             msg: "Order created successfully",
+//             data: createOrderSave,
+//             payData: payData || "COD - ORDER"
+//         });
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).json({
+//             success: false,
+//             msg: "Internal Server Error"
+//         });
+//     }
+// };
+
 exports.CreateOrder = async (req, res) => {
     try {
-        console.log("i am hiut")
+        console.log("Request body:", req.body);
         const { items, finalPrice, UserInfo, PaymentMode, UserDeliveryAddress } = req.body;
 
         if (!finalPrice || !UserInfo || !PaymentMode || !UserDeliveryAddress) {
             return res.status(403).json({
                 success: false,
-                msg: "Please Fill All Fields "
+                msg: "Please fill all fields"
             });
         }
 
         let payData;
-
         if (PaymentMode === "Online") {
-            console.log("I Ma Hit")
+            console.log("Processing online payment");
             const { amount, transactionId, Merchant } = generateOnlinePaymentDetails(finalPrice);
             payData = await doPayment(amount, Merchant, transactionId, res, req);
+            if (!payData.success) {
+                return res.status(400).json({
+                    success: false,
+                    msg: "Payment failed"
+                });
+            }
         }
 
-        const createOrderSave = new Orders({
+        const newOrder = new Orders({
             items: items,
             UserInfo,
             UserDeliveryAddress,
@@ -86,22 +138,24 @@ exports.CreateOrder = async (req, res) => {
             FinalPrice: finalPrice
         });
 
-        await createOrderSave.save();
+        await newOrder.save();
 
         res.status(200).json({
             success: true,
             msg: "Order created successfully",
-            data: createOrderSave,
+            data: newOrder,
             payData: payData || "COD - ORDER"
         });
     } catch (error) {
-        console.log(error);
+        console.error("Error creating order:", error);
         res.status(500).json({
             success: false,
             msg: "Internal Server Error"
         });
     }
 };
+
+
 
 function generateOnlinePaymentDetails(finalPrice) {
     const transactionId = generateMerchantTransactionId();

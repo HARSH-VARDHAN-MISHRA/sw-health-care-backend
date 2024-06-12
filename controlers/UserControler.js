@@ -738,7 +738,7 @@ exports.LoginUser = async (req, res) => {
             })
         }
 
-        sendToken(existUser, res, 200);
+         sendToken(existUser, 200,res);
         // console.log(sendToken(existUser, res, 200))
 
     } catch (error) {

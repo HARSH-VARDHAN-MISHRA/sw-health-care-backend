@@ -9,6 +9,8 @@ const { createSaleBanner, getAllSaleBanner, deleteSaleBanner, updateSaleBanner }
 const { createBanner, getAllBanner, deleteBanner, updateBanner } = require('../controlers/BannerController');
 const { createTag, getAllTag, deleteTag, updateTag } = require('../controlers/TagControler');
 const { register, LoginUser, ResendSignOtp, ResendOtp, PasswordChangeRequest, verifyOtpForSignIn, VerifyOtp } = require('../controlers/UserControler');
+const { CreateOrder } = require('../controlers/OrderController');
+const { isAuthenticatedUser } = require('../middlewares/auth');
 
 
 const storage = multer.diskStorage({
@@ -68,7 +70,7 @@ route.delete('/delete-tag/:id',deleteTag);
 route.put('/update-tag/:id',updateTag);
 
 
-
+route.post('/create-order', isAuthenticatedUser, CreateOrder)
 
 
 

@@ -18,7 +18,7 @@ const MiniProductSchema = new mongoose.Schema({
 })
 
 const orderSchema = new mongoose.Schema({
-    items: [MiniProduct],
+    items: [MiniProductSchema],
     FinalPrice: {
         type: String
     },
