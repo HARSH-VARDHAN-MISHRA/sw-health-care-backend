@@ -35,7 +35,7 @@ route.post('/Verify-sign-Otp', verifyOtpForSignIn);
 route.post('/resend-sign-Otp', ResendSignOtp);
 route.post('/Verify-Otp/:email/:newPassword', VerifyOtp)
 
-route.post("/login",LoginUser)
+route.post("/login",LoginUser);
 
 // -- categories --- 
 route.post("/create-category",upload.single("categoryImage") ,createCategory );

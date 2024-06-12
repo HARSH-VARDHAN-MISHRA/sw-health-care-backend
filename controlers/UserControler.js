@@ -710,23 +710,6 @@ exports.VerifyOtp = async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //Login
 exports.LoginUser = async (req, res) => {
     try {
