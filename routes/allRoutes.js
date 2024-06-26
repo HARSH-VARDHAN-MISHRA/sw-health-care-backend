@@ -48,8 +48,8 @@ route.put('/update-category/:id',upload.single("categoryImage"),updateCategory);
 // -- Products ---- 
 route.post("/create-product",createProduct );
 route.get("/get-all-product",getAllProduct );
-route.get("/delete-product/:id",deleteProduct );
-route.get("/update-product/:id",updateProduct );
+route.delete("/delete-product/:id",deleteProduct );
+route.put("/update-product/:id",updateProduct );
 
 // -- Sales banner --- 
 route.post("/create-sale-banner",upload.single("saleBannerImage") ,createSaleBanner );

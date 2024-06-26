@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const cloudinary = require("cloudinary").v2
 
-const categoryDetail = require('../models/category.model')
+const categoryDetail = require('../models/category.model');
 
 cloudinary.config({
     cloud_name: "dohzhn0ny",
