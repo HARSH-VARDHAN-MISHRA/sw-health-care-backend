@@ -107,10 +107,11 @@ async function doPayment(amount, Merchant, transactionId, res, req) {
 
 exports.CreateOrder = async (req, res) => {
     try {
+        const User = req.user;
         console.log("Request body:", req.body);
-        const { items, finalPrice, UserInfo, PaymentMode, UserDeliveryAddress } = req.body;
+        const { items, finalPrice, PaymentMode, address } = req.body;
 
-        if (!finalPrice || !UserInfo || !PaymentMode || !UserDeliveryAddress) {
+        if (!finalPrice || !PaymentMode || !address) {
             return res.status(403).json({
                 success: false,
                 msg: "Please fill all fields"
@@ -122,6 +123,7 @@ exports.CreateOrder = async (req, res) => {
             console.log("Processing online payment");
             const { amount, transactionId, Merchant } = generateOnlinePaymentDetails(finalPrice);
             payData = await doPayment(amount, Merchant, transactionId, res, req);
+            console.log(payData);
             if (!payData.success) {
                 return res.status(400).json({
                     success: false,
@@ -132,8 +134,20 @@ exports.CreateOrder = async (req, res) => {
 
         const newOrder = new Orders({
             items: items,
-            UserInfo,
-            UserDeliveryAddress,
+            UserInfo: {
+                Name: User.name,
+                Email: User.email,
+                PhoneNumber: User.PhoneNumber,
+                userid:User._id
+            },
+            UserDeliveryAddress:{
+                Street:address.street,
+                City:address.city,
+                State:address.state,
+                Pincode:address.pincode,
+                HouseNo:address.HouseNo,
+                landMark:address.landMark
+            },
             PaymentMode,
             FinalPrice: finalPrice
         });
@@ -154,6 +168,7 @@ exports.CreateOrder = async (req, res) => {
         });
     }
 };
+
 
 
 
@@ -191,8 +206,6 @@ function MerchantId() {
 }
 
 exports.checkStatus = async (req, res) => {
-
-
     // Extract the merchantTransactionId from the request body
     const { transactionId: merchantTransactionId } = req.body;
 
@@ -322,6 +335,31 @@ exports.getSingleOrder = async (req, res) => {
         console.log(error)
     }
 }
+
+exports.getMyLatestOrder = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const latestOrder = await Orders.findOne({ "UserInfo.userid": userId }).sort({ createdAt: -1 });
+
+        if (!latestOrder) {
+            return res.status(404).json({
+                success: false,
+                msg: "No orders found for this user",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: latestOrder,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            msg: "Internal Server Error",
+        });
+    }
+};
 
 // exports.CancelOrder = async (req,res)=>(
 //     try {

@@ -4,7 +4,7 @@ const MiniProductSchema = new mongoose.Schema({
     categoryName: {
         type: String
     },
-    productName: {
+    name: {
         type: String
     },
     productImages:[String],
@@ -33,7 +33,8 @@ const orderSchema = new mongoose.Schema({
             type: String
         },
         userid: {
-            type: String
+            type: mongoose.Schema.Types.ObjectId,
+            ref:'UserSchemaDetails'
         }
     },
     UserDeliveryAddress:{
