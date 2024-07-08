@@ -319,6 +319,7 @@ exports.getSingleOrder = async (req, res) => {
                 msg: "Id is invalid"
             })
         }
+        console.log(id);
         const searchOrder = await Orders.findById(id)
         if (searchOrder.length === 0) {
             return res.status(402).json({

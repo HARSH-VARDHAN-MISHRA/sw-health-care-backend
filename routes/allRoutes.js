@@ -74,7 +74,7 @@ route.put('/update-tag/:id', updateTag);
 route.post('/create-order', isAuthenticatedUser, CreateOrder)
 route.get('/all-order' ,getAllOrder)
 route.get('/single-order/:id' ,getSingleOrder)
-route.get('/get-my-latest-order' ,isAuthenticatedUser,getSingleOrder)
+route.get('/get-my-latest-order/:id' ,isAuthenticatedUser,getSingleOrder)
 
 
 
